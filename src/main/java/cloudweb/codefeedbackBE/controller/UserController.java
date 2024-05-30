@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +28,20 @@ public class UserController {
         } catch (Exception e) {
 
             log.error("유저 회원가입 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<ResponseDTO> delete(@RequestParam String email) {
+
+        try {
+            userService.deleteUserByEmail(email);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("회원탈퇴 성공", null, null));
+
+        } catch (Exception e) {
+
+            log.error("회원탈퇴 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }

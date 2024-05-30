@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Repository
 public class MemoryUserRepository implements UserRepository{
@@ -17,5 +18,16 @@ public class MemoryUserRepository implements UserRepository{
         user.setId(sequence++);
         db.put(user.getId(), user);
         return user.getId();
+    }
+
+    @Override
+    public void deleteUserByEmail(String email) {
+
+        User foundUser = db.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException("해당 email을 가진 user가 없습니다."));
+
+        db.remove(foundUser.getId());
     }
 }
