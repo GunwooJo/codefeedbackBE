@@ -3,6 +3,8 @@ package cloudweb.codefeedbackBE.controller;
 
 import cloudweb.codefeedbackBE.dto.LoginUserDTO;
 import cloudweb.codefeedbackBE.dto.ResponseDTO;
+import cloudweb.codefeedbackBE.dto.UpdateUserDTO;
+import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.service.UserService;
 import jakarta.validation.Valid;
@@ -58,6 +60,17 @@ public class UserController {
 
         } catch (Exception e) {
             log.error("유저 로그인 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
+
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable String userId, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
+        try {
+            User updatedUser = userService.updateUser(userId, updateUserDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", updatedUser, null));
+        } catch (Exception e) {
+            log.error("회원정보 수정 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
