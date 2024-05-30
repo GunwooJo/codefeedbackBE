@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{userId}")
-    public ResponseEntity<ResponseDTO> updateUser(@PathVariable String userId, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
         try {
             User updatedUser = userService.updateUser(userId, updateUserDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", updatedUser, null));

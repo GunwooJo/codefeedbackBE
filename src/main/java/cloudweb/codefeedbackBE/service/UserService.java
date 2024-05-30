@@ -42,7 +42,7 @@ public class UserService {
                 .build();
     }
 
-    public User updateUser(String userId, UpdateUserDTO updateUserDTO) {
+    public User updateUser(Long userId, UpdateUserDTO updateUserDTO) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
