@@ -30,4 +30,16 @@
 //
 //        db.remove(foundUser.getId());
 //    }
+//
+//    @Override
+//    public User userSignIn(HashMap<String, String> loginUser){
+//        User lUser = null;
+//        for (Map.Entry<Long, User> entry : db.entrySet()) {
+//            User v = entry.getValue();
+//            if (v.getEmail().equals(loginUser.get("email")) && v.getPassword().equals(loginUser.get("password"))) {
+//                lUser = v;
+//            }
+//        }
+//        return lUser;
+//    }
 //}
