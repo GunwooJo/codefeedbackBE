@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("delete from User u where u.email = :email")
     public void deleteUserByEmail(String email);
 
-    public User userSignIn(HashMap<String, String> loginUser);
+    @Query("select u from User u where u.email = :email and u.password = :password")
+    public User userSignIn(String email, String password);
 
 }

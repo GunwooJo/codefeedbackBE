@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public LoginUserDTO userSignIn(HashMap<String, String> loginUser) {
-        User loginedUser = userRepository.userSignIn(loginUser);
+        User loginedUser = userRepository.userSignIn(loginUser.get("email"), loginUser.get("password"));
         return LoginUserDTO.builder()
                 .email(loginedUser.getEmail())
                 .nickname(loginedUser.getNickname())
