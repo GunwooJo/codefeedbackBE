@@ -1,6 +1,7 @@
 package cloudweb.codefeedbackBE.controller;
 
 
+import cloudweb.codefeedbackBE.dto.LoginUserDTO;
 import cloudweb.codefeedbackBE.dto.ResponseDTO;
 import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.service.UserService;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +45,19 @@ public class UserController {
         } catch (Exception e) {
 
             log.error("회원탈퇴 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<ResponseDTO> signUp(@RequestBody HashMap<String, String> loginUser) {
+
+        try {
+            LoginUserDTO loginUserDTO = userService.userSignIn(loginUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("로그인 성공", loginUserDTO, null));
+
+        } catch (Exception e) {
+            log.error("유저 로그인 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
