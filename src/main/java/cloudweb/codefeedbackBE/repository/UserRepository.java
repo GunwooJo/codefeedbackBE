@@ -13,4 +13,5 @@ public interface UserRepository {
 
     public User userSignIn(HashMap<String, String> loginUser);
 
+    Optional<User> findById(String userId);
 }
