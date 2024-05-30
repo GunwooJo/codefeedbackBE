@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Repository
 public class MemoryUserRepository implements UserRepository{
@@ -32,14 +33,14 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public User userSignIn(HashMap<String, String> loginUser){
+    public Optional<User> findById(String userId) { // 새 메서드 구현
         User lUser = null;
         for (Map.Entry<Long, User> entry : db.entrySet()) {
             User v = entry.getValue();
-            if (v.getEmail().equals(loginUser.get("email")) && v.getPassword().equals(loginUser.get("password"))) {
+            if (v.getEmail().equals(userId)) {
                 lUser = v;
             }
         }
-        return lUser;
+        return Optional.ofNullable(lUser);
     }
 }
