@@ -42,4 +42,17 @@
 //        }
 //        return lUser;
 //    }
+//
+//    @Override
+//    public Optional<User> findById(String userId) { // 새 메서드 구현
+//        User lUser = null;
+//        for (Map.Entry<Long, User> entry : db.entrySet()) {
+//            User v = entry.getValue();
+//            if (v.getEmail().equals(userId)) {
+//                lUser = v;
+//            }
+//        }
+//        return Optional.ofNullable(lUser);
+//    }
 //}
+//
