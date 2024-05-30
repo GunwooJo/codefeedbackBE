@@ -5,14 +5,16 @@ import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public Long userSignUp(UserDTO userDTO) {
+    public void userSignUp(UserDTO userDTO) {
 
         User user = User.builder()
                 .email(userDTO.getEmail())
@@ -20,7 +22,7 @@ public class UserService {
                 .nickname(userDTO.getNickname())
                 .build();
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public void deleteUserByEmail(String email) {
