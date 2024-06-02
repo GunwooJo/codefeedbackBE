@@ -31,11 +31,12 @@ public class UserService {
     }
 
     public void deleteUserByEmail(String email) {
-        userRepository.deleteUserByEmail(email);
+        userRepository.deleteByEmail(email);
     }
 
     public LoginUserDTO userSignIn(HashMap<String, String> loginUser) {
-        User loginedUser = userRepository.userSignIn(loginUser.get("email"), loginUser.get("password"));
+
+        User loginedUser = userRepository.findByEmailAndPassword(loginUser.get("email"), loginUser.get("password"));
         return LoginUserDTO.builder()
                 .email(loginedUser.getEmail())
                 .nickname(loginedUser.getNickname())

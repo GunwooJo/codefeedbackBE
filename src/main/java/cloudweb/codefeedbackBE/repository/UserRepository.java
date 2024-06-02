@@ -8,11 +8,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Modifying
-    @Query("delete from User u where u.email = :email")
-    public void deleteUserByEmail(String email);
+    public void deleteByEmail(String email);
 
-    @Query("select u from User u where u.email = :email and u.password = :password")
-    public User userSignIn(String email, String password);
-
+    public User findByEmailAndPassword(String email, String password);
 }
