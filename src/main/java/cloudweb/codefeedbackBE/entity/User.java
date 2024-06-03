@@ -3,6 +3,9 @@ package cloudweb.codefeedbackBE.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -12,6 +15,7 @@ public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(length = 30, nullable = false)
@@ -23,4 +27,12 @@ public class User {
     @Column(length = 20, nullable = false)
     private String nickname;
 
+    @OneToMany(mappedBy = "user")
+    @Setter(AccessLevel.NONE)
+    private List<Post> posts = new ArrayList<>();
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+        post.setUser(this);
+    }
 }
