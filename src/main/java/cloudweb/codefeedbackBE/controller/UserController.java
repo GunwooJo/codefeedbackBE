@@ -7,6 +7,7 @@ import cloudweb.codefeedbackBE.dto.UpdateUserDTO;
 import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,10 +53,13 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<ResponseDTO> signUp(@RequestBody HashMap<String, String> loginUser) {
+    public ResponseEntity<ResponseDTO> signUp(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
 
         try {
             LoginUserDTO loginUserDTO = userService.userSignIn(loginUser);
+            session.setAttribute("loggedInUser", loginUserDTO);
+            session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
+
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("로그인 성공", loginUserDTO, null));
 
         } catch (Exception e) {
