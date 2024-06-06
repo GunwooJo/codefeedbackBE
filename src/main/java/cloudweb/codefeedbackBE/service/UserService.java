@@ -34,6 +34,7 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public LoginUserDTO userSignIn(HashMap<String, String> loginUser) {
 
         User loginedUser = userRepository.findByEmailAndPassword(loginUser.get("email"), loginUser.get("password"));
