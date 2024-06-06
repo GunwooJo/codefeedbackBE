@@ -25,10 +25,8 @@ public class Message {
     @Column(length = 10, nullable = false)
     private String role;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Setter(AccessLevel.NONE)
-    private LocalDateTime createdAt;
+    private Long createdAt;
 
     @Column(columnDefinition = "text")
     private String content;
