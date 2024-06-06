@@ -78,4 +78,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
+
+    @GetMapping("/user/info")
+    public ResponseEntity<ResponseDTO> getUserInfo(HttpSession session) {
+        try {
+            Object loggedInUser = session.getAttribute("loggedInUser");
+            if (loggedInUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+            }
+
+            if (loggedInUser instanceof LoginUserDTO) {
+                LoginUserDTO loginUserDTO = (LoginUserDTO) loggedInUser;
+                UserDTO userDTO = new UserDTO(loginUserDTO.getEmail(), loginUserDTO.getPassword(), loginUserDTO.getNickname());
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", userDTO, null));
+            } else if (loggedInUser instanceof UserDTO) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", (UserDTO) loggedInUser, null));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, "잘못된 사용자 정보 타입"));
+            }
+        } catch (Exception e) {
+            log.error("사용자 정보 가져오기 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
 }
