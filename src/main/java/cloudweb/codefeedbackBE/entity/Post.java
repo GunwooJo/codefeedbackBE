@@ -1,11 +1,10 @@
 package cloudweb.codefeedbackBE.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +12,10 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 
     @Id
@@ -50,6 +53,6 @@ public class Post {
     @Setter(AccessLevel.NONE)
     private LocalDateTime modifiedAt;
 
-    @Column(name = "is_public", nullable = false)
-    private boolean isPublic;
+    @Column(nullable = false)
+    private boolean access;
 }

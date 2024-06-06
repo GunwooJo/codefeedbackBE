@@ -18,8 +18,8 @@ public class PostDTO {
 
     private String content;
 
-    @NotNull(message = "isPublic은 null이 될 수 없음")
-    private boolean isPublic;
+    @NotNull(message = "access는 null이 될 수 없음")
+    private boolean access;
 
     @NotNull(message = "Messages list cannot be null")
     private List<MessageDTO> messages = new ArrayList<>();
