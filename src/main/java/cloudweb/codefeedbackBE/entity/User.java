@@ -18,7 +18,7 @@ public class User {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 30, nullable = false, unique = true)
     private String email;
 
     @Column(length = 60, nullable = false)

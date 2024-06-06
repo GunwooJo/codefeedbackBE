@@ -2,6 +2,7 @@ package cloudweb.codefeedbackBE.service;
 
 import cloudweb.codefeedbackBE.dto.MessageDTO;
 import cloudweb.codefeedbackBE.dto.PostDTO;
+import cloudweb.codefeedbackBE.dto.PostModifyDTO;
 import cloudweb.codefeedbackBE.entity.Message;
 import cloudweb.codefeedbackBE.entity.Post;
 import cloudweb.codefeedbackBE.entity.User;
@@ -40,5 +41,14 @@ public class PostService {
         }
 
         postRepository.save(post);
+    }
+
+    public void modifyPost(Long postId, PostModifyDTO postModifyDTO) {
+
+        Post foundPost = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("아이디가 " + postId + "인 post 찾을 수 없음."));
+
+        foundPost.setTitle(postModifyDTO.getTitle());
+        foundPost.setContent(postModifyDTO.getContent());
+        foundPost.setAccess(postModifyDTO.isAccess());
     }
 }
