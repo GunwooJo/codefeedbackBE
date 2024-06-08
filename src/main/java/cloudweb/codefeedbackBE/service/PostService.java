@@ -51,4 +51,8 @@ public class PostService {
         foundPost.setContent(postModifyDTO.getContent());
         foundPost.setAccess(postModifyDTO.isAccess());
     }
+
+    public void deletePost(Long postId){
+        Post foundPost = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("아이디가 " + postId + "인 post 찾을 수 없음."));
+    }
 }
