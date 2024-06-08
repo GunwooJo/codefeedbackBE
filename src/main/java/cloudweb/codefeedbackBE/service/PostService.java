@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -77,5 +75,10 @@ public class PostService {
                 .messages(messageDTOS)
                 .access(foundPost.isAccess())
                 .build();
+    }
+
+    public void deletePost(Long postId){
+        Post foundPost = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("아이디가 " + postId + "인 post 찾을 수 없음."));
+        postRepository.delete(foundPost);
     }
 }

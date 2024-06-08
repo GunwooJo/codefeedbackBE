@@ -65,7 +65,7 @@ public class PostController {
     public ResponseEntity<ResponseDTO> postDetail(@PathVariable Long id, HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
-        LoginUserDTO loggedInUser = (LoginUserDTO)session.getAttribute("loggedInUser");
+        LoginUserDTO loggedInUser = (LoginUserDTO) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }
@@ -77,6 +77,24 @@ public class PostController {
         } catch (Exception e) {
 
             log.error("post 조회 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<ResponseDTO> deletePost(@PathVariable Long id, HttpServletRequest request){
+
+        HttpSession session = request.getSession(false);
+        LoginUserDTO loggedInUser = (LoginUserDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
+        try{
+            postService.deletePost(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Post 삭제 성공", null, null));
+        } catch (Exception e) {
+            log.error("게시글 삭제 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
