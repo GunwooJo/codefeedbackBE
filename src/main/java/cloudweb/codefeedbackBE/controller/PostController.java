@@ -60,4 +60,24 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
+
+    @GetMapping("/post/{id}")
+    public ResponseEntity<ResponseDTO> postDetail(@PathVariable Long id, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        LoginUserDTO loggedInUser = (LoginUserDTO)session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
+        try {
+            PostDTO postDTO = postService.postDetail(id, loggedInUser.getEmail());
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("post 조회 성공", postDTO, null));
+
+        } catch (Exception e) {
+
+            log.error("post 조회 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
 }

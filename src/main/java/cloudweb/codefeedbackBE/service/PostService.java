@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,5 +52,30 @@ public class PostService {
         foundPost.setTitle(postModifyDTO.getTitle());
         foundPost.setContent(postModifyDTO.getContent());
         foundPost.setAccess(postModifyDTO.isAccess());
+    }
+
+    public PostDTO postDetail(Long postId, String loggedInUserEmail) {
+
+        Post foundPost = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("아이디가 " + postId + "인 post 찾을 수 없음."));
+
+        if (!foundPost.isAccess()) {
+            if (!foundPost.getUser().getEmail().equals(loggedInUserEmail)) {
+                throw new RuntimeException("비공개 게시글 입니다.");
+            }
+        }
+        List<Message> messages = foundPost.getMessages();
+        List<MessageDTO> messageDTOS = messages.stream()
+                .map(message -> MessageDTO.builder()
+                        .role(message.getRole())
+                        .createdAt(message.getCreatedAt())
+                        .content(message.getContent()).build())
+                .toList();
+
+        return PostDTO.builder()
+                .title(foundPost.getTitle())
+                .content(foundPost.getContent())
+                .messages(messageDTOS)
+                .access(foundPost.isAccess())
+                .build();
     }
 }
