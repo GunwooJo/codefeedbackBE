@@ -1,11 +1,8 @@
 package cloudweb.codefeedbackBE.controller;
 
 
-import cloudweb.codefeedbackBE.dto.LoginUserDTO;
-import cloudweb.codefeedbackBE.dto.ResponseDTO;
-import cloudweb.codefeedbackBE.dto.UpdateUserDTO;
+import cloudweb.codefeedbackBE.dto.*;
 import cloudweb.codefeedbackBE.entity.User;
-import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -57,11 +54,11 @@ public class UserController {
     public ResponseEntity<ResponseDTO> signUp(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
 
         try {
-            LoginUserDTO loginUserDTO = userService.userSignIn(loginUser);
-            session.setAttribute("loggedInUser", loginUserDTO);
+            UserDTO2 user = userService.userSignIn(loginUser);
+            session.setAttribute("loggedInUser", user);
             session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("로그인 성공", loginUserDTO, null));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("로그인 성공", user, null));
 
         } catch (Exception e) {
             log.error("유저 로그인 실패: ", e);
@@ -83,7 +80,7 @@ public class UserController {
     @GetMapping("/user/info")
     public ResponseEntity<ResponseDTO> getUserInfo(HttpServletRequest request) {
         try {
-            LoginUserDTO loggedInUser = (LoginUserDTO) request.getSession(false).getAttribute("loggedInUser");
+            UserDTO2 loggedInUser = (UserDTO2) request.getSession(false).getAttribute("loggedInUser");
 
             if (loggedInUser == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));

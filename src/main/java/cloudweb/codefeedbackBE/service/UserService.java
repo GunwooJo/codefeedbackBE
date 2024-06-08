@@ -3,6 +3,7 @@ package cloudweb.codefeedbackBE.service;
 import cloudweb.codefeedbackBE.dto.LoginUserDTO;
 import cloudweb.codefeedbackBE.dto.UpdateUserDTO;
 import cloudweb.codefeedbackBE.dto.UserDTO;
+import cloudweb.codefeedbackBE.dto.UserDTO2;
 import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public LoginUserDTO userSignIn(HashMap<String, String> loginUser) {
+    public UserDTO2 userSignIn(HashMap<String, String> loginUser) {
 
         User loginedUser = userRepository.findByEmailAndPassword(loginUser.get("email"), loginUser.get("password"));
-        return LoginUserDTO.builder()
+        return UserDTO2.builder()
                 .email(loginedUser.getEmail())
                 .nickname(loginedUser.getNickname())
                 .build();
