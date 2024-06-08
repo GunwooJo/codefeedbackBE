@@ -72,15 +72,9 @@ public class UserController {
     }
 
     @PutMapping("/user/{userId}")
-    public ResponseEntity<ResponseDTO> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserDTO updateUserDTO, HttpServletRequest request) {
-
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
-
+    public ResponseEntity<ResponseDTO> updateUser(@RequestHeader("email") String email, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
         try {
-            User updatedUser = userService.updateUser(userId, updateUserDTO);
+            User updatedUser = userService.updateUserByEmail(email, updateUserDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", updatedUser, null));
         } catch (Exception e) {
             log.error("회원정보 수정 실패: ", e);
@@ -89,14 +83,14 @@ public class UserController {
     }
 
     @GetMapping("/user/info")
-    public ResponseEntity<ResponseDTO> getUserInfo(HttpServletRequest request) {
+    public ResponseEntity<ResponseDTO> getUserInfo(@RequestHeader("email") String email) {
         try {
-            UserDTO2 loggedInUser = (UserDTO2) request.getSession(false).getAttribute("loggedInUser");
+            UserDTO2 userDTO = userService.findUserByEmail(email);
 
-            if (loggedInUser == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+            if (userDTO == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "사용자 정보를 찾을 수 없습니다."));
             }
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", loggedInUser, null));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", userDTO, null));
 
         } catch (Exception e) {
             log.error("사용자 정보 가져오기 실패: ", e);
@@ -104,3 +98,4 @@ public class UserController {
         }
     }
 }
+

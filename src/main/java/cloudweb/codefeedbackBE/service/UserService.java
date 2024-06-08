@@ -45,15 +45,26 @@ public class UserService {
                 .build();
     }
 
-    public User updateUser(Long userId, UpdateUserDTO updateUserDTO) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+    public UserDTO2 findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return null;
+        }
+        return UserDTO2.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .build();
+    }
+
+    public User updateUserByEmail(String email, UpdateUserDTO updateUserDTO) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
             user.setNickname(updateUserDTO.getNickname());
             user.setPassword(updateUserDTO.getPassword());
-            return user;
+            return userRepository.save(user);
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
     }
 }
+
