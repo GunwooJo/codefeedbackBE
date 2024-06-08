@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<ResponseDTO> signUp(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
+    public ResponseEntity<ResponseDTO> signIn(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
 
         try {
             UserDTO2 user = userService.userSignIn(loginUser);
