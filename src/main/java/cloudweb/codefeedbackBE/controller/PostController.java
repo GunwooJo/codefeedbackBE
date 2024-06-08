@@ -23,8 +23,7 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<ResponseDTO> savePost(@RequestBody @Valid PostDTO postDTO, HttpServletRequest request) {
 
-        HttpSession session = request.getSession(false);
-        UserDTO2 loggedInUser = (UserDTO2)session.getAttribute("loggedInUser");
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }
@@ -43,8 +42,7 @@ public class PostController {
     @PutMapping("/post/{id}")
     public ResponseEntity<ResponseDTO> modifyPost(@RequestBody @Valid PostModifyDTO postModifyDTO, @PathVariable Long id, HttpServletRequest request) {
 
-        HttpSession session = request.getSession(false);
-        UserDTO2 loggedInUser = (UserDTO2)session.getAttribute("loggedInUser");
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }
@@ -63,8 +61,7 @@ public class PostController {
     @GetMapping("/post/{id}")
     public ResponseEntity<ResponseDTO> postDetail(@PathVariable Long id, HttpServletRequest request) {
 
-        HttpSession session = request.getSession(false);
-        UserDTO2 loggedInUser = (UserDTO2) session.getAttribute("loggedInUser");
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }
@@ -83,8 +80,7 @@ public class PostController {
     @DeleteMapping("/post/{id}")
     public ResponseEntity<ResponseDTO> deletePost(@PathVariable Long id, HttpServletRequest request){
 
-        HttpSession session = request.getSession(false);
-        UserDTO2 loggedInUser = (UserDTO2) session.getAttribute("loggedInUser");
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }

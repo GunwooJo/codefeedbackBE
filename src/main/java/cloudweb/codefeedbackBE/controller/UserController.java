@@ -37,7 +37,12 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<ResponseDTO> delete(@RequestParam String email) {
+    public ResponseEntity<ResponseDTO> delete(@RequestParam String email, HttpServletRequest request) {
+
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
 
         try {
             userService.deleteUserByEmail(email);
@@ -67,7 +72,13 @@ public class UserController {
     }
 
     @PutMapping("/user/{userId}")
-    public ResponseEntity<ResponseDTO> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserDTO updateUserDTO, HttpServletRequest request) {
+
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
         try {
             User updatedUser = userService.updateUser(userId, updateUserDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", updatedUser, null));
