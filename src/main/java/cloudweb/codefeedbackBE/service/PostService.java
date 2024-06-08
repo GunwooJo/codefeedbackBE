@@ -72,6 +72,7 @@ public class PostService {
 
         return PostDTO2.builder()
                 .id(foundPost.getId())
+                .nickname(foundPost.getUser().getNickname())
                 .title(foundPost.getTitle())
                 .content(foundPost.getContent())
                 .messages(messageDTOS)

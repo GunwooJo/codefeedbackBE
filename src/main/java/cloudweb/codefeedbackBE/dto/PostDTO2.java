@@ -16,6 +16,8 @@ public class PostDTO2 {
 
     private Long id;
 
+    private String nickname;
+
     @NotBlank(message = "Title cannot be blank")
     private String title;
 
