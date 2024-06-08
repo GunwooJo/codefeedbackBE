@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -83,5 +84,26 @@ public class PostService {
     public void deletePost(Long postId){
         Post foundPost = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("아이디가 " + postId + "인 post 찾을 수 없음."));
         postRepository.delete(foundPost);
+    }
+
+    public List<PostDTO2> findMyPost(String email) {
+        return postRepository.findMyPost(email).stream()
+                .map(post -> {
+                    List<MessageDTO> messageDTOS = post.getMessages().stream()
+                            .map(message -> MessageDTO.builder()
+                                    .role(message.getRole())
+                                    .createdAt(message.getCreatedAt())
+                                    .content(message.getContent())
+                                    .build()).toList();
+
+                    return
+                        PostDTO2.builder()
+                        .id(post.getId())
+                        .nickname(post.getUser().getNickname())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .access(post.isAccess())
+                        .messages(messageDTOS).build();
+                }).collect(Collectors.toList());
     }
 }
