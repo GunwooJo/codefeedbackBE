@@ -10,4 +10,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p where p.user.email = :email")
     List<Post> findMyPost(String email);
+
+    @Query("select p from Post p where p.access = true")
+    List<Post> findAccessPosts();
 }

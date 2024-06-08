@@ -106,4 +106,24 @@ public class PostService {
                         .messages(messageDTOS).build();
                 }).collect(Collectors.toList());
     }
+
+    public List<PostDTO2> findAccessPosts() {
+        return postRepository.findAccessPosts().stream()
+                .map(post -> {
+                    List<MessageDTO> messageDTOS = post.getMessages().stream()
+                            .map(message -> MessageDTO.builder()
+                                    .role(message.getRole())
+                                    .createdAt(message.getCreatedAt())
+                                    .content(message.getContent())
+                                    .build()).toList();
+
+                    return PostDTO2.builder()
+                                    .id(post.getId())
+                                    .nickname(post.getUser().getNickname())
+                                    .title(post.getTitle())
+                                    .content(post.getContent())
+                                    .access(post.isAccess())
+                                    .messages(messageDTOS).build();
+                }).collect(Collectors.toList());
+    }
 }

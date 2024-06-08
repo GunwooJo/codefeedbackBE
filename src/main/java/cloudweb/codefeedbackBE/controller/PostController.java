@@ -112,4 +112,23 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
+
+    @GetMapping("/post/access")
+    public ResponseEntity<ResponseDTO> accessPosts(HttpServletRequest request) {
+
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
+        try {
+            List<PostDTO2> myPosts = postService.findAccessPosts();
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("공개된 post 조회 성공", myPosts, null));
+
+        } catch (Exception e) {
+
+            log.error("공개된 post 조회 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
 }
