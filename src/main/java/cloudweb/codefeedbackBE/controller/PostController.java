@@ -26,6 +26,10 @@ public class PostController {
 
         HttpSession session = request.getSession(false);
         LoginUserDTO loggedInUser = (LoginUserDTO)session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
         try {
             postService.savePost(postDTO, loggedInUser.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("Post 저장 성공", null, null));
@@ -38,7 +42,13 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<ResponseDTO> modifyPost(@RequestBody @Valid PostModifyDTO postModifyDTO, @PathVariable Long id) {
+    public ResponseEntity<ResponseDTO> modifyPost(@RequestBody @Valid PostModifyDTO postModifyDTO, @PathVariable Long id, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        LoginUserDTO loggedInUser = (LoginUserDTO)session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
 
         try {
             postService.modifyPost(id, postModifyDTO);
