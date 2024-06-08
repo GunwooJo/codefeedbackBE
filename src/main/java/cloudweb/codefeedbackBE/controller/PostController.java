@@ -1,9 +1,6 @@
 package cloudweb.codefeedbackBE.controller;
 
-import cloudweb.codefeedbackBE.dto.LoginUserDTO;
-import cloudweb.codefeedbackBE.dto.PostDTO;
-import cloudweb.codefeedbackBE.dto.PostModifyDTO;
-import cloudweb.codefeedbackBE.dto.ResponseDTO;
+import cloudweb.codefeedbackBE.dto.*;
 import cloudweb.codefeedbackBE.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -71,7 +68,7 @@ public class PostController {
         }
 
         try {
-            PostDTO postDTO = postService.postDetail(id, loggedInUser.getEmail());
+            PostDTO2 postDTO = postService.postDetail(id, loggedInUser.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("post 조회 성공", postDTO, null));
 
         } catch (Exception e) {
