@@ -91,7 +91,7 @@ public class UserController {
     @GetMapping("/user/info")
     public ResponseEntity<ResponseDTO> getUserInfo(HttpServletRequest request) {
         try {
-            UserDTO2 loggedInUser = (UserDTO2) request.getSession(false).getAttribute("loggedInUser");
+            UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
 
             if (loggedInUser == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
