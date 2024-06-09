@@ -37,23 +37,25 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<ResponseDTO> delete(@RequestParam String email, HttpServletRequest request) {
+    public ResponseEntity<ResponseDTO> delete(@RequestBody HashMap<String, String> request, HttpServletRequest httpRequest) {
 
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+        UserDTO2 loggedInUser = (UserDTO2) httpRequest.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
         }
 
+        String email = request.get("email");
+        String password = request.get("password");
+
         try {
-            userService.deleteUserByEmail(email);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("회원탈퇴 성공", null, null));
-
+            userService.deleteUserByEmailAndPassword(email, password);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원탈퇴 성공", null, null));
         } catch (Exception e) {
-
             log.error("회원탈퇴 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
+
 
     @PostMapping("/user/login")
     public ResponseEntity<ResponseDTO> signIn(@RequestBody HashMap<String, String> loginUser, HttpSession session) {

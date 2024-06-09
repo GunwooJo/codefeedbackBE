@@ -31,9 +31,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUserByEmail(String email) {
-        userRepository.deleteByEmail(email);
+    public void deleteUserByEmailAndPassword(String email, String password) {
+
+        User user = userRepository.findByEmailAndPassword(email, password);
+        if (user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new RuntimeException("이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
     }
+
 
     @Transactional(readOnly = true)
     public UserDTO2 userSignIn(HashMap<String, String> loginUser) {
