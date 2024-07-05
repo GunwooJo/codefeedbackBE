@@ -1,6 +1,5 @@
 package cloudweb.codefeedbackBE.service;
 
-import cloudweb.codefeedbackBE.dto.LoginUserDTO;
 import cloudweb.codefeedbackBE.dto.UpdateUserDTO;
 import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.dto.UserDTO2;
@@ -43,13 +42,19 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserDTO2 userSignIn(HashMap<String, String> loginUser) {
+    public Optional<UserDTO2> userSignIn(HashMap<String, String> loginUser) {
 
         User loginedUser = userRepository.findByEmailAndPassword(loginUser.get("email"), loginUser.get("password"));
-        return UserDTO2.builder()
+
+        if (loginedUser == null) {
+            return Optional.empty();
+        }
+
+        UserDTO2 user = UserDTO2.builder()
                 .email(loginedUser.getEmail())
                 .nickname(loginedUser.getNickname())
                 .build();
+        return Optional.of(user);
     }
 
     public UserDTO2 findUserByEmail(String email) {

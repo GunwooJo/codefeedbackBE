@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +62,13 @@ public class UserController {
     public ResponseEntity<ResponseDTO> signIn(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
 
         try {
-            UserDTO2 user = userService.userSignIn(loginUser);
+
+            Optional<UserDTO2> optionalUser = userService.userSignIn(loginUser);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "아이디나 비밀번호가 틀리거나 존재하지 않는 회원입니다."));
+            }
+
+            UserDTO2 user = optionalUser.get();
             session.setAttribute("loggedInUser", user);
             session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
 
