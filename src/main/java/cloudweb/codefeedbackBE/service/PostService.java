@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,9 +27,9 @@ public class PostService {
 
     public void savePost(PostDTO postDTO, String userEmail) {
 
-        User foundUser = userRepository.findByEmail(userEmail);
+        Optional<User> foundUser = userRepository.findByEmail(userEmail);
         Post post = new Post();
-        post.setUser(foundUser);
+        post.setUser(foundUser.get());
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
         post.setAccess(postDTO.isAccess());

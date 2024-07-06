@@ -6,6 +6,7 @@ import cloudweb.codefeedbackBE.dto.UserDTO2;
 import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +19,16 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     public void userSignUp(UserDTO userDTO) {
 
+        String encodedPw = passwordEncoder.encode(userDTO.getPassword());
+
         User user = User.builder()
                 .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
+                .password(encodedPw)
                 .nickname(userDTO.getNickname())
                 .build();
 
@@ -44,39 +49,35 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<UserDTO2> userSignIn(HashMap<String, String> loginUser) {
 
-        User loginedUser = userRepository.findByEmailAndPassword(loginUser.get("email"), loginUser.get("password"));
+        String plainPw = loginUser.get("password");
+        Optional<User> foundUser = userRepository.findByEmail(loginUser.get("email"));
 
-        if (loginedUser == null) {
-            return Optional.empty();
+        if (foundUser.isPresent() && passwordEncoder.matches(plainPw, foundUser.get().getPassword())) {
+
+            UserDTO2 user = UserDTO2.builder()
+                    .email(foundUser.get().getEmail())
+                    .nickname(foundUser.get().getNickname())
+                    .build();
+
+            return Optional.of(user);
         }
 
-        UserDTO2 user = UserDTO2.builder()
-                .email(loginedUser.getEmail())
-                .nickname(loginedUser.getNickname())
-                .build();
-        return Optional.of(user);
+        return Optional.empty();
     }
 
-    public UserDTO2 findUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            return null;
-        }
-        return UserDTO2.builder()
+    public Optional<UserDTO2> findUserByEmail(String email) {
+        return userRepository.findByEmail(email).map(user -> UserDTO2.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .build();
+                .build());
     }
 
     public User updateUserByEmail(String email, UpdateUserDTO updateUserDTO) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
+        return userRepository.findByEmail(email).map(user -> {
             user.setNickname(updateUserDTO.getNickname());
             user.setPassword(updateUserDTO.getPassword());
             return userRepository.save(user);
-        } else {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
-        }
+        }).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
 

@@ -100,9 +100,9 @@ public class UserController {
         }
 
         try {
-            UserDTO2 userDTO = userService.findUserByEmail(email);
+            Optional<UserDTO2> userDTO = userService.findUserByEmail(email);
 
-            if (userDTO == null) {
+            if (userDTO.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "사용자 정보를 찾을 수 없습니다."));
             }
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", userDTO, null));
