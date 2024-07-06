@@ -38,12 +38,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<ResponseDTO> delete(@RequestBody HashMap<String, String> request, HttpServletRequest httpRequest) {
-
-        UserDTO2 loggedInUser = (UserDTO2) httpRequest.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
+    public ResponseEntity<ResponseDTO> delete(@RequestBody HashMap<String, String> request) {
 
         String email = request.get("email");
         String password = request.get("password");
@@ -91,16 +86,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/info")
-    public ResponseEntity<ResponseDTO> getUserInfo(@RequestHeader("email") String email, HttpServletRequest request) {
-
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
+    @PostMapping("/user/info")
+    public ResponseEntity<ResponseDTO> getUserInfo(@RequestBody UserDTO3 userDTO3) {
 
         try {
-            Optional<UserDTO2> userDTO = userService.findUserByEmail(email);
+            Optional<UserDTO2> userDTO = userService.findUserByEmail(userDTO3.getEmail());
 
             if (userDTO.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "사용자 정보를 찾을 수 없습니다."));
