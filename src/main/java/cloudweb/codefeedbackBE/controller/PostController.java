@@ -24,9 +24,6 @@ public class PostController {
     public ResponseEntity<ResponseDTO> savePost(@RequestBody @Valid PostDTO postDTO, HttpServletRequest request) {
 
         UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
 
         try {
             postService.savePost(postDTO, loggedInUser.getEmail());
@@ -40,12 +37,7 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<ResponseDTO> modifyPost(@RequestBody @Valid PostModifyDTO postModifyDTO, @PathVariable Long id, HttpServletRequest request) {
-
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
+    public ResponseEntity<ResponseDTO> modifyPost(@RequestBody @Valid PostModifyDTO postModifyDTO, @PathVariable Long id) {
 
         try {
             postService.modifyPost(id, postModifyDTO);
@@ -62,9 +54,6 @@ public class PostController {
     public ResponseEntity<ResponseDTO> postDetail(@PathVariable Long id, HttpServletRequest request) {
 
         UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
 
         try {
             PostDTO2 postDTO = postService.postDetail(id, loggedInUser.getEmail());
@@ -78,12 +67,7 @@ public class PostController {
     }
 
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<ResponseDTO> deletePost(@PathVariable Long id, HttpServletRequest request){
-
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
+    public ResponseEntity<ResponseDTO> deletePost(@PathVariable Long id){
 
         try{
             postService.deletePost(id);
@@ -98,9 +82,6 @@ public class PostController {
     public ResponseEntity<ResponseDTO> myPost(HttpServletRequest request) {
 
         UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
 
         try {
             List<PostDTO2> myPosts = postService.findMyPost(loggedInUser.getEmail());
@@ -114,12 +95,7 @@ public class PostController {
     }
 
     @GetMapping("/post/access")
-    public ResponseEntity<ResponseDTO> accessPosts(HttpServletRequest request) {
-
-        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
-        }
+    public ResponseEntity<ResponseDTO> accessPosts() {
 
         try {
             List<PostDTO2> myPosts = postService.findAccessPosts();
