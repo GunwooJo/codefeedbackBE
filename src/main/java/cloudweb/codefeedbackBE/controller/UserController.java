@@ -23,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/user")
+    @PostMapping("/user/join")
     public ResponseEntity<ResponseDTO> signUp(@RequestBody @Valid UserDTO userDTO) {
 
         try {
