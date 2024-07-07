@@ -73,9 +73,12 @@ public class UserService {
     }
 
     public User updateUserByEmail(String email, UpdateUserDTO updateUserDTO) {
+
+        String encodedPw = passwordEncoder.encode(updateUserDTO.getPassword());
+
         return userRepository.findByEmail(email).map(user -> {
             user.setNickname(updateUserDTO.getNickname());
-            user.setPassword(updateUserDTO.getPassword());
+            user.setPassword(encodedPw);
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
