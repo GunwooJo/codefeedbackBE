@@ -3,17 +3,19 @@ package cloudweb.codefeedbackBE.config;
 import cloudweb.codefeedbackBE.dto.UserDTO2;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if ("OPTIONS".equals(request.getMethod())) {
-            System.out.println("preflight은 통과시킴");
+            log.debug("preflight은 통과시킴");
 
             return true;
         }
