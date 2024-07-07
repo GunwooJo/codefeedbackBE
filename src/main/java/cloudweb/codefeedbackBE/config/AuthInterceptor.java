@@ -12,6 +12,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if ("OPTIONS".equals(request.getMethod())) {
+            System.out.println("preflight은 통과시킴");
+
+            return true;
+        }
         UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
         if (loggedInUser == null) {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
