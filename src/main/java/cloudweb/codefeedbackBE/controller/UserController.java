@@ -100,5 +100,23 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
         }
     }
+
+    @GetMapping("/session/check")
+    public ResponseEntity<ResponseDTO> checkSession(HttpServletRequest request) {
+
+        try {
+
+            UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+            if (loggedInUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "세션이 유효하지 않습니다."));
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("세션이 유효합니다.", loggedInUser, null));
+
+        } catch (Exception e) {
+            log.error("세션 체크 실패: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
+        }
+    }
 }
 
