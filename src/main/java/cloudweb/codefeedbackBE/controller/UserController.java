@@ -73,11 +73,17 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{userId}")
-    public ResponseEntity<ResponseDTO> updateUser(@RequestHeader("email") String email, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
+    @PutMapping("/user/modify")
+    public ResponseEntity<ResponseDTO> updateUser(@RequestBody @Valid UpdateUserDTO updateUserDTO, HttpServletRequest request, HttpSession session) {
+
+        UserDTO2 loggedInUser = (UserDTO2) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "로그인이 필요합니다."));
+        }
+
         try {
-            User updatedUser = userService.updateUserByEmail(email, updateUserDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", updatedUser, null));
+            userService.updateUserByEmail(loggedInUser.getEmail(), updateUserDTO, session);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원정보 수정 성공", null, null));
         } catch (Exception e) {
             log.error("회원정보 수정 실패: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));

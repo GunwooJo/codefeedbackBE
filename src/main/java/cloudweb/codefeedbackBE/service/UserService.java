@@ -76,9 +76,17 @@ public class UserService {
                 .build());
     }
 
-    public User updateUserByEmail(String email, UpdateUserDTO updateUserDTO) {
+    public User updateUserByEmail(String email, UpdateUserDTO updateUserDTO, HttpSession session) {
 
         String encodedPw = passwordEncoder.encode(updateUserDTO.getPassword());
+
+        UserDTO2 userDTO2 = UserDTO2.builder()
+                .email(email)
+                .nickname(updateUserDTO.getNickname())
+                .build();
+
+        session.setAttribute("loggedInUser", userDTO2);
+        session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
 
         return userRepository.findByEmail(email).map(user -> {
             user.setNickname(updateUserDTO.getNickname());
