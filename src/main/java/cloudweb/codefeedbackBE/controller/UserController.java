@@ -58,14 +58,12 @@ public class UserController {
 
         try {
 
-            Optional<UserDTO2> optionalUser = userService.userSignIn(loginUser);
+            Optional<UserDTO2> optionalUser = userService.userSignIn(loginUser, session);
             if (optionalUser.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "아이디나 비밀번호가 틀리거나 존재하지 않는 회원입니다."));
             }
 
             UserDTO2 user = optionalUser.get();
-            session.setAttribute("loggedInUser", user);
-            session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
 
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("로그인 성공", user, null));
 

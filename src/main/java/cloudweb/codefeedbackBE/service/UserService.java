@@ -5,6 +5,7 @@ import cloudweb.codefeedbackBE.dto.UserDTO;
 import cloudweb.codefeedbackBE.dto.UserDTO2;
 import cloudweb.codefeedbackBE.entity.User;
 import cloudweb.codefeedbackBE.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO2> userSignIn(HashMap<String, String> loginUser) {
+    public Optional<UserDTO2> userSignIn(HashMap<String, String> loginUser, HttpSession session) {
 
         String plainPw = loginUser.get("password");
         Optional<User> foundUser = userRepository.findByEmail(loginUser.get("email"));
@@ -58,6 +59,9 @@ public class UserService {
                     .email(foundUser.get().getEmail())
                     .nickname(foundUser.get().getNickname())
                     .build();
+
+            session.setAttribute("loggedInUser", user);
+            session.setMaxInactiveInterval(1800);   //세션 유효시간 30분 = 1800초
 
             return Optional.of(user);
         }
