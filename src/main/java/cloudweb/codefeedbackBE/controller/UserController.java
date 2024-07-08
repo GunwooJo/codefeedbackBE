@@ -37,22 +37,6 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user")
-    public ResponseEntity<ResponseDTO> delete(@RequestBody HashMap<String, String> request) {
-
-        String email = request.get("email");
-        String password = request.get("password");
-
-        try {
-            userService.deleteUserByEmailAndPassword(email, password);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("회원탈퇴 성공", null, null));
-        } catch (Exception e) {
-            log.error("회원탈퇴 실패: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
-        }
-    }
-
-
     @PostMapping("/user/login")
     public ResponseEntity<ResponseDTO> signIn(@RequestBody HashMap<String, String> loginUser, HttpSession session) {
 
