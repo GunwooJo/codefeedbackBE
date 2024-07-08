@@ -74,23 +74,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/info")
-    public ResponseEntity<ResponseDTO> getUserInfo(@RequestBody UserDTO3 userDTO3) {
-
-        try {
-            Optional<UserDTO2> userDTO = userService.findUserByEmail(userDTO3.getEmail());
-
-            if (userDTO.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO(null, null, "사용자 정보를 찾을 수 없습니다."));
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("사용자 정보 가져오기 성공", userDTO, null));
-
-        } catch (Exception e) {
-            log.error("사용자 정보 가져오기 실패: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(null, null, e.getMessage()));
-        }
-    }
-
     @GetMapping("/session/check")
     public ResponseEntity<ResponseDTO> checkSession(HttpServletRequest request) {
 
